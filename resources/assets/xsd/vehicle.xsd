@@ -1,0 +1,73 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="xml">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Vehicle" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="type">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="electric"/>
+                                        <xs:enumeration value="hybrid"/>
+                                        <xs:enumeration value="diesel"/>
+                                        <xs:enumeration value="petrol"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="usage">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="personal"/>
+                                        <xs:enumeration value="business"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element type="xs:string" name="license_plate"/>
+                            <xs:element type="xs:byte" name="weight_category"/>
+                            <xs:element type="xs:byte" name="no_seats"/>
+                            <xs:element name="has_boot">
+                                <xs:simpleType>
+                                    <xs:union>
+                                        <xs:simpleType>
+                                            <xs:restriction base='xs:string'>
+                                                <xs:length value="0"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                        <xs:simpleType>
+                                            <xs:restriction base='xs:byte' />
+                                        </xs:simpleType>
+                                    </xs:union>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element type="xs:byte" name="has_trailer"/>
+                            <xs:element type="xs:string" name="owner_name"/>
+                            <xs:element type="xs:string" name="owner_company"/>
+                            <xs:element type="xs:string" name="owner_profession"/>
+                            <xs:element type="xs:string" name="transmission"/>
+                            <xs:element type="xs:string" name="colour"/>
+                            <xs:element type="xs:string" name="is_hgv"/>
+                            <xs:element type="xs:byte" name="no_doors"/>
+                            <xs:element type="xs:byte" name="sunroof"/>
+                            <xs:element type="xs:string" name="has_gps"/>
+                            <xs:element type="xs:byte" name="no_wheels"/>
+                            <xs:element type="xs:short" name="engine_cc"/>
+                            <xs:element name="fuel_type">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="electric"/>
+                                        <xs:enumeration value="diesel"/>
+                                        <xs:enumeration value="petrol"/>
+                                        <xs:enumeration value="duel"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute type="xs:string" name="manufacturer" use="required"/>
+                        <xs:attribute type="xs:string" name="model" use="required"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
