@@ -7,8 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class OwnerCompany extends Model
 {
 
+    const TABLE_NAME = 'vehicle_owner_company';
+
+    protected $table = self::TABLE_NAME;
+
+    protected $fillable = [
+        'name'
+    ];
+
     public function employees(){
-        return $this->hasMany('App\Model\Vehicle\Owner');
+        return $this->hasMany(Owner::class);
     }
 
 }

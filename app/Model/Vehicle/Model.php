@@ -7,12 +7,20 @@ use Illuminate\Database\Eloquent\Model as EloquentModel;
 class Model extends EloquentModel
 {
 
+    const TABLE_NAME = 'vehicle_model';
+
+    protected $table = self::TABLE_NAME;
+
+    protected $fillable = [
+        'name', 'is_hgv'
+    ];
+
     public function vehicles(){
-        return $this->hasMany('App\Model\Vehicle\Vehicle');
+        return $this->hasMany(Vehicle::class);
     }
 
     public function manufacturer(){
-        return $this->belongsTo('App\Model\Vehicle\Manufacturer');
+        return $this->belongsTo(Manufacturer::class);
     }
 
 }

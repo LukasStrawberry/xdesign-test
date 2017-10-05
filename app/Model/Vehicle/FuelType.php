@@ -7,8 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class FuelType extends Model
 {
 
+    const TABLE_NAME = 'vehicle_fuel_type';
+
+    protected $table = self::TABLE_NAME;
+
+    protected $fillable = [
+        'name'
+    ];
+
     public function vehicles(){
-        return $this->hasMany('App\Model\Vehicle\Vehicle');
+        return $this->hasMany(Vehicle::class);
     }
 
 }

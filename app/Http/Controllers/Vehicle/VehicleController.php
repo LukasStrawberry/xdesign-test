@@ -3,11 +3,16 @@
 namespace App\Http\Controllers\Vehicle;
 
 use App\Model\Vehicle\Vehicle;
+use App\Repository\Vehicle\VehicleRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class VehicleController extends Controller
 {
+
+    public function __construct()
+    {
+    }
 
     /**
      * Display a listing of the resource.
@@ -16,7 +21,7 @@ class VehicleController extends Controller
      */
     public function index()
     {
-        var_dump('tady'); die;
+        //
     }
 
     /**
