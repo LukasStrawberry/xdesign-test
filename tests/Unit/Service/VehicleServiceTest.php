@@ -67,7 +67,16 @@ class VehicleServiceTest extends TestCase
         $this->vehicleRepositoryInterfaceMock = $this->getMockBuilder(VehicleInterface::class)
             ->getMock();
 
-        $this->object = new VehicleService($this->vehicleRepositoryInterfaceMock, resource_path('assets/xsd/vehicle.xsd'));
+        $this->object = $this->getMockBuilder(VehicleService::class)
+            ->setConstructorArgs([$this->vehicleRepositoryInterfaceMock, resource_path('assets/xsd/vehicle.xsd')])
+            ->setMethods(['getVehicleDataFromDOMDocument'])
+            ->getMock();
+
+        $this->object->expects($this->any())
+            ->method('getVehicleDataFromDOMDocument')
+            ->willReturn([
+                'license_plate' => 'HH14 PCH'
+            ]);
     }
 
     public function testCreateFromXMLFileReturnsBoolean(){
@@ -119,28 +128,28 @@ class VehicleServiceTest extends TestCase
         $this->object->createFromXML($file->url());
     }
 
-    public function testCreateFromXMLCallsRepositoryInsert(){
+    public function testCreateFromXMLCallsRepositoryGetOrCreate(){
         $this->vehicleRepositoryInterfaceMock
             ->expects($this->atLeastOnce())
-            ->method('insert');
+            ->method('getOrCreate');
 
         $this->object->createFromXML($this->existingFilePath);
     }
 
-    public function testCreateReturnFalseIfInsertIsNotSuccess(){
+    public function testCreateReturnFalseIfGetOrCreateIsNotSuccess(){
         $this->vehicleRepositoryInterfaceMock
             ->expects($this->atLeastOnce())
-            ->method('insert')
+            ->method('getOrCreate')
             ->willReturn(false)
         ;
 
         $this->assertFalse($this->object->createFromXML($this->existingFilePath));
     }
 
-    public function testCreateReturnTrueIfInsertIsSuccessFull(){
+    public function testCreateReturnTrueIfGetOrCreateIsSuccessFull(){
         $this->vehicleRepositoryInterfaceMock
             ->expects($this->atLeastOnce())
-            ->method('insert')
+            ->method('getOrCreate')
             ->willReturn(true)
         ;
 

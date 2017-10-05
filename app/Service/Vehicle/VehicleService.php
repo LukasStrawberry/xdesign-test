@@ -36,6 +36,72 @@ class VehicleService
      */
     private $xsdSchema;
 
+    public function getVehicleDataFromDOMDocument(\DOMElement $vehicle){
+        $manufacturer = (new BasicRepository(new Manufacturer()))->getOrCreate(
+            ['name' => $vehicle->getAttribute('manufacturer')]
+        );
+
+        $model = (new BasicRepository(new Model()))->getOrCreate(
+            [
+                'name' => $vehicle->getAttribute('model'),
+                'manufacturer_id' => $manufacturer->id
+            ],
+            ['is_hgv' => $vehicle->getElementsByTagName('is_hgv')[0]->nodeValue ? true : false]
+        );
+
+        $type = (new BasicRepository(new Type()))->getOrCreate(
+            ['name' => $vehicle->getElementsByTagName('type')[0]->nodeValue]
+        );
+
+        $usage = (new BasicRepository(new Usage()))->getOrCreate(
+            ['name' => $vehicle->getElementsByTagName('usage')[0]->nodeValue]
+        );
+
+        $weightCategory = (new BasicRepository(new WeightCategory()))->getOrCreate(
+            ['id' => $vehicle->getElementsByTagName('weight_category')[0]->nodeValue],
+            ['name' => 'category ' . $vehicle->getElementsByTagName('weight_category')[0]->nodeValue]
+        );
+
+        $ownerCompany = (new BasicRepository(new OwnerCompany()))->getOrCreate(
+            ['name' => $vehicle->getElementsByTagName('owner_company')[0]->nodeValue]
+        );
+
+        $owner = (new BasicRepository(new Owner()))->getOrCreate(
+            [
+                'name' => $vehicle->getElementsByTagName('owner_name')[0]->nodeValue,
+                'company_id' => $ownerCompany->id
+            ],
+            ['profession' => $vehicle->getElementsByTagName('owner_profession')[0]->nodeValue]
+        );
+
+        $transmission = (new BasicRepository(new Transmission()))->getOrCreate(
+            ['name' => $vehicle->getElementsByTagName('transmission')[0]->nodeValue]
+        );
+
+        $fuelType = (new BasicRepository(new FuelType()))->getOrCreate(
+            ['name' => $vehicle->getElementsByTagName('fuel_type')[0]->nodeValue]
+        );
+
+        $data = [
+            'seats_count' => $vehicle->getElementsByTagName('no_seats')[0]->nodeValue,
+            'doors_count' => $vehicle->getElementsByTagName('no_doors')[0]->nodeValue,
+            'wheels_count' => $vehicle->getElementsByTagName('no_wheels')[0]->nodeValue,
+            'has_boot' => $vehicle->getElementsByTagName('has_boot')[0]->nodeValue ? true : false,
+            'has_trailer' => $vehicle->getElementsByTagName('has_trailer')[0]->nodeValue ? true : false,
+            'has_sunroof' => $vehicle->getElementsByTagName('sunroof')[0]->nodeValue ? true : false,
+            'has_gps' => $vehicle->getElementsByTagName('has_gps')[0]->nodeValue ? true : false,
+            'colour' => $vehicle->getElementsByTagName('colour')[0]->nodeValue,
+            'engine_cc' => $vehicle->getElementsByTagName('engine_cc')[0]->nodeValue,
+            'type_id' => $type->id,
+            'fuel_type_id' => $fuelType->id,
+            'model_id' => $model->id,
+            'owner_id' => $owner->id,
+            'transmission_id' => $transmission->id,
+            'usage_id' => $usage->id,
+            'weight_category_id' => $weightCategory->id,
+        ];
+    }
+
     /**
      * VehicleService constructor.
      * @param VehicleInterface $vehicleRepository
@@ -111,69 +177,7 @@ class VehicleService
         $vehicles = $dom->getElementsByTagName('Vehicle');
 
         foreach ($vehicles as $vehicle){
-            $manufacturer = (new BasicRepository(new Manufacturer()))->getOrCreate(
-                ['name' => $vehicle->getAttribute('manufacturer')]
-            );
-
-            $model = (new BasicRepository(new Model()))->getOrCreate(
-                [
-                    'name' => $vehicle->getAttribute('model'),
-                    'manufacturer_id' => $manufacturer->id
-                ],
-                ['is_hgv' => $vehicle->getElementsByTagName('is_hgv')[0]->nodeValue ? true : false]
-            );
-
-            $type = (new BasicRepository(new Type()))->getOrCreate(
-                ['name' => $vehicle->getElementsByTagName('type')[0]->nodeValue]
-            );
-
-            $usage = (new BasicRepository(new Usage()))->getOrCreate(
-                ['name' => $vehicle->getElementsByTagName('usage')[0]->nodeValue]
-            );
-
-            $weightCategory = (new BasicRepository(new WeightCategory()))->getOrCreate(
-                ['id' => $vehicle->getElementsByTagName('weight_category')[0]->nodeValue],
-                ['name' => 'category ' . $vehicle->getElementsByTagName('weight_category')[0]->nodeValue]
-            );
-
-            $ownerCompany = (new BasicRepository(new OwnerCompany()))->getOrCreate(
-                ['name' => $vehicle->getElementsByTagName('owner_company')[0]->nodeValue]
-            );
-
-            $owner = (new BasicRepository(new Owner()))->getOrCreate(
-                [
-                    'name' => $vehicle->getElementsByTagName('owner_name')[0]->nodeValue,
-                    'company_id' => $ownerCompany->id
-                ],
-                ['profession' => $vehicle->getElementsByTagName('owner_profession')[0]->nodeValue]
-            );
-
-            $transmission = (new BasicRepository(new Transmission()))->getOrCreate(
-                ['name' => $vehicle->getElementsByTagName('transmission')[0]->nodeValue]
-            );
-
-            $fuelType = (new BasicRepository(new FuelType()))->getOrCreate(
-                ['name' => $vehicle->getElementsByTagName('fuel_type')[0]->nodeValue]
-            );
-
-            $data = [
-                'seats_count' => $vehicle->getElementsByTagName('no_seats')[0]->nodeValue,
-                'doors_count' => $vehicle->getElementsByTagName('no_doors')[0]->nodeValue,
-                'wheels_count' => $vehicle->getElementsByTagName('no_wheels')[0]->nodeValue,
-                'has_boot' => $vehicle->getElementsByTagName('has_boot')[0]->nodeValue ? true : false,
-                'has_trailer' => $vehicle->getElementsByTagName('has_trailer')[0]->nodeValue ? true : false,
-                'has_sunroof' => $vehicle->getElementsByTagName('sunroof')[0]->nodeValue ? true : false,
-                'has_gps' => $vehicle->getElementsByTagName('has_gps')[0]->nodeValue ? true : false,
-                'colour' => $vehicle->getElementsByTagName('colour')[0]->nodeValue,
-                'engine_cc' => $vehicle->getElementsByTagName('engine_cc')[0]->nodeValue,
-                'type_id' => $type->id,
-                'fuel_type_id' => $fuelType->id,
-                'model_id' => $model->id,
-                'owner_id' => $owner->id,
-                'transmission_id' => $transmission->id,
-                'usage_id' => $usage->id,
-                'weight_category_id' => $weightCategory->id,
-            ];
+            $data = $this->getVehicleDataFromDOMDocument($vehicle);
 
             if(!$this->vehicleRepository->getOrCreate(
                 ['license_plate' => $vehicle->getElementsByTagName('license_plate')[0]->nodeValue],
