@@ -53,6 +53,14 @@ class VehicleService
         $this->xsdSchema = $xsdSchema;
     }
 
+    /**
+     * @return VehicleInterface
+     */
+    public function getVehicleRepository()
+    {
+        return $this->vehicleRepository;
+    }
+
     public function createFromXML($xmlFile)
     {
         if(!file_exists($xmlFile)){

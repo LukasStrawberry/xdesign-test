@@ -18,6 +18,13 @@ class Vehicle extends EloquentModel
         'usage_id', 'weight_category_id', 'type_id'
     ];
 
+    protected $casts = [
+        'has_gps' => 'boolean',
+        'has_sunroof' => 'boolean',
+        'has_trailer' => 'boolean',
+        'has_boot' => 'boolean',
+    ];
+
     public function type(){
         return $this->belongsTo(Type::class);
     }

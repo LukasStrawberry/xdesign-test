@@ -15,6 +15,10 @@ class Model extends EloquentModel
         'name', 'is_hgv', 'manufacturer_id'
     ];
 
+    protected $casts = [
+        'is_hgv' => 'boolean',
+    ];
+
     public $timestamps = false;
 
     public function vehicles(){

@@ -2,16 +2,25 @@
 
 namespace App\Http\Controllers\Vehicle;
 
+use App\Http\Resources\Vehicle\VehicleResource;
+use App\Http\Resources\Vehicle\VehicleResourceCollection;
 use App\Model\Vehicle\Vehicle;
 use App\Repository\Vehicle\VehicleRepository;
+use App\Service\Vehicle\VehicleService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class VehicleController extends Controller
 {
 
-    public function __construct()
+    /**
+     * @var VehicleService
+     */
+    private $vehicleService;
+
+    public function __construct(VehicleService $vehicleService)
     {
+        $this->vehicleService = $vehicleService;
     }
 
     /**
@@ -21,7 +30,7 @@ class VehicleController extends Controller
      */
     public function index()
     {
-        //
+        return new VehicleResourceCollection($this->vehicleService->getVehicleRepository()->getAll());
     }
 
     /**
@@ -32,7 +41,7 @@ class VehicleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**
@@ -41,9 +50,13 @@ class VehicleController extends Controller
      * @param  \App\Model\Vehicle\Vehicle  $vehicle
      * @return \Illuminate\Http\Response
      */
-    public function show(Vehicle $vehicle)
+    public function show($id)
     {
-        //
+        if(!$vehicle = $this->vehicleService->getVehicleRepository()->getById($id)){
+            exit();
+        }
+
+        return new VehicleResource($vehicle);
     }
 
     /**

@@ -7,6 +7,7 @@
 namespace App\Repository;
 
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class BasicRepository implements BasicInterface
@@ -35,12 +36,14 @@ class BasicRepository implements BasicInterface
 
     public function getById(int $vehicleId)
     {
-        // TODO: Implement getById() method.
+        $record = $this->model->find(1);
+
+        return $record ?: false;
     }
 
-    public function getAll(): array
+    public function getAll(): Collection
     {
-        // TODO: Implement getAll() method.
+        return $this->model->all();
     }
 
     public function getOrCreate(array $selector, array $data = [])

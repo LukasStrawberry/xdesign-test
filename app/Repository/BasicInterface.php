@@ -7,6 +7,7 @@
 namespace App\Repository;
 
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 interface BasicInterface
@@ -36,6 +37,6 @@ interface BasicInterface
     /**
      * @return array
      */
-    public function getAll() : array ;
+    public function getAll() : Collection ;
 
 }
