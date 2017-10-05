@@ -149,7 +149,6 @@ class VehicleService
             );
 
             $data = [
-                'license_plate' => $vehicle->getElementsByTagName('license_plate')[0]->nodeValue,
                 'seats_count' => $vehicle->getElementsByTagName('no_seats')[0]->nodeValue,
                 'doors_count' => $vehicle->getElementsByTagName('no_doors')[0]->nodeValue,
                 'wheels_count' => $vehicle->getElementsByTagName('no_wheels')[0]->nodeValue,
@@ -168,7 +167,10 @@ class VehicleService
                 'weight_category_id' => $weightCategory->id,
             ];
 
-            if(!$this->vehicleRepository->insert($data)){
+            if(!$this->vehicleRepository->getOrCreate(
+                ['license_plate' => $vehicle->getElementsByTagName('license_plate')[0]->nodeValue],
+                $data
+            )){
                 return false;
             }
         }
