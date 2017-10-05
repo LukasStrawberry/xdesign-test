@@ -14,8 +14,13 @@ class Vehicle extends EloquentModel
     protected $fillable = [
         'license_plate', 'seats_count', 'doors_count', 'wheels_count',
         'has_boot', 'has_trailer', 'has_sunroof', 'has_gps', 'colour',
-        'engine_cc'
+        'engine_cc', 'fuel_type_id', 'model_id', 'owner_id', 'transmission_id',
+        'usage_id', 'weight_category_id', 'type_id'
     ];
+
+    public function type(){
+        return $this->belongsTo(Type::class);
+    }
 
     public function fuelType(){
         return $this->belongsTo(FuelType::class);

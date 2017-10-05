@@ -11,6 +11,16 @@ use App\Exceptions\Vehicle\XMLFileIsNotCorrectXMLException;
 use App\Exceptions\Vehicle\XMLFileIsNotFileException;
 use App\Exceptions\Vehicle\XMLFileIsNotReadableException;
 use App\Exceptions\Vehicle\XMLFileIsNotValidAccordingToSchemaException;
+use App\Model\Vehicle\FuelType;
+use App\Model\Vehicle\Manufacturer;
+use App\Model\Vehicle\Model;
+use App\Model\Vehicle\Owner;
+use App\Model\Vehicle\OwnerCompany;
+use App\Model\Vehicle\Transmission;
+use App\Model\Vehicle\Type;
+use App\Model\Vehicle\Usage;
+use App\Model\Vehicle\WeightCategory;
+use App\Repository\BasicRepository;
 use App\Repository\Vehicle\VehicleInterface;
 
 class VehicleService
@@ -91,17 +101,52 @@ class VehicleService
         }
 
         $vehicles = $dom->getElementsByTagName('Vehicle');
+
         foreach ($vehicles as $vehicle){
-            $manufacturer = $vehicle->getAttribute('manufacturer');
-            $model = $vehicle->getAttribute('model');
-            $type = $vehicle->getElementsByTagName('type')[0]->nodeValue;
-            $usage = $vehicle->getElementsByTagName('usage')[0]->nodeValue;
-            $weightCategory = $vehicle->getElementsByTagName('weight_category')[0]->nodeValue;
-            $owner = $vehicle->getElementsByTagName('owner_name')[0]->nodeValue;
-            $ownerCompany = $vehicle->getElementsByTagName('owner_company')[0]->nodeValue;
-            $ownerProfession = $vehicle->getElementsByTagName('owner_profession')[0]->nodeValue;
-            $transmission = $vehicle->getElementsByTagName('transmission')[0]->nodeValue;
-            $fuelType = $vehicle->getElementsByTagName('fuel_type')[0]->nodeValue;
+            $manufacturer = (new BasicRepository(new Manufacturer()))->getOrCreate(
+                ['name' => $vehicle->getAttribute('manufacturer')]
+            );
+
+            $model = (new BasicRepository(new Model()))->getOrCreate(
+                [
+                    'name' => $vehicle->getAttribute('model'),
+                    'manufacturer_id' => $manufacturer->id
+                ],
+                ['is_hgv' => $vehicle->getElementsByTagName('is_hgv')[0]->nodeValue ? true : false]
+            );
+
+            $type = (new BasicRepository(new Type()))->getOrCreate(
+                ['name' => $vehicle->getElementsByTagName('type')[0]->nodeValue]
+            );
+
+            $usage = (new BasicRepository(new Usage()))->getOrCreate(
+                ['name' => $vehicle->getElementsByTagName('usage')[0]->nodeValue]
+            );
+
+            $weightCategory = (new BasicRepository(new WeightCategory()))->getOrCreate(
+                ['id' => $vehicle->getElementsByTagName('weight_category')[0]->nodeValue],
+                ['name' => 'category ' . $vehicle->getElementsByTagName('weight_category')[0]->nodeValue]
+            );
+
+            $ownerCompany = (new BasicRepository(new OwnerCompany()))->getOrCreate(
+                ['name' => $vehicle->getElementsByTagName('owner_company')[0]->nodeValue]
+            );
+
+            $owner = (new BasicRepository(new Owner()))->getOrCreate(
+                [
+                    'name' => $vehicle->getElementsByTagName('owner_name')[0]->nodeValue,
+                    'company_id' => $ownerCompany->id
+                ],
+                ['profession' => $vehicle->getElementsByTagName('owner_profession')[0]->nodeValue]
+            );
+
+            $transmission = (new BasicRepository(new Transmission()))->getOrCreate(
+                ['name' => $vehicle->getElementsByTagName('transmission')[0]->nodeValue]
+            );
+
+            $fuelType = (new BasicRepository(new FuelType()))->getOrCreate(
+                ['name' => $vehicle->getElementsByTagName('fuel_type')[0]->nodeValue]
+            );
 
             $data = [
                 'license_plate' => $vehicle->getElementsByTagName('license_plate')[0]->nodeValue,
@@ -114,14 +159,19 @@ class VehicleService
                 'has_gps' => $vehicle->getElementsByTagName('has_gps')[0]->nodeValue ? true : false,
                 'colour' => $vehicle->getElementsByTagName('colour')[0]->nodeValue,
                 'engine_cc' => $vehicle->getElementsByTagName('engine_cc')[0]->nodeValue,
-                'is_hgv' => $vehicle->getElementsByTagName('is_hgv')[0]->nodeValue ? true : false,
+                'type_id' => $type->id,
+                'fuel_type_id' => $fuelType->id,
+                'model_id' => $model->id,
+                'owner_id' => $owner->id,
+                'transmission_id' => $transmission->id,
+                'usage_id' => $usage->id,
+                'weight_category_id' => $weightCategory->id,
             ];
 
             if(!$this->vehicleRepository->insert($data)){
                 return false;
             }
         }
-
         return true;
     }
 

@@ -15,6 +15,8 @@ class OwnerCompany extends Model
         'name'
     ];
 
+    public $timestamps = false;
+
     public function employees(){
         return $this->hasMany(Owner::class);
     }

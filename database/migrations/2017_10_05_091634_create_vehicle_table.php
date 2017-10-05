@@ -27,6 +27,9 @@ class CreateVehicleTable extends Migration
             $table->boolean('has_gps');
             $table->timestamps();
 
+            $table->unsignedBigInteger('type_id');
+            $table->foreign('type_id')->references('id')->on(\App\Model\Vehicle\Type::TABLE_NAME);
+
             $table->unsignedBigInteger('fuel_type_id');
             $table->foreign('fuel_type_id')->references('id')->on(\App\Model\Vehicle\FuelType::TABLE_NAME);
 

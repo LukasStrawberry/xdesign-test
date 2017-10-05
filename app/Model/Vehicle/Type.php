@@ -4,10 +4,10 @@ namespace App\Model\Vehicle;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Transmission extends Model
+class Type extends Model
 {
 
-    const TABLE_NAME = 'vehicle_transmission';
+    const TABLE_NAME = 'vehicle_type';
 
     protected $table = self::TABLE_NAME;
 

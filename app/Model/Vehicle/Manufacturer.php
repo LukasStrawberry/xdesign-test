@@ -15,6 +15,8 @@ class Manufacturer extends EloquentModel
         'name'
     ];
 
+    public $timestamps = false;
+
     public function models(){
         return $this->hasMany(Model::class);
     }

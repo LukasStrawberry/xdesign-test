@@ -12,8 +12,10 @@ class Owner extends Model
     protected $table = self::TABLE_NAME;
 
     protected $fillable = [
-        'name', 'profession'
+        'name', 'profession', 'company_id'
     ];
+
+    public $timestamps = false;
 
     public function vehicles(){
         return $this->hasMany(Vehicle::class);

@@ -6,24 +6,10 @@
 
 namespace App\Repository\Vehicle;
 
-use App\Model\Vehicle\Vehicle;
+use App\Repository\BasicInterface;
 
-interface VehicleInterface
+interface VehicleInterface extends BasicInterface
 {
-
-    /**
-     * Insert single record into data storage
-     * @param array $vehicleData
-     * @return false|Vehicle
-     */
-    public function insert(array $vehicleData) ;
-
-    /**
-     *
-     * @param int $vehicleId
-     * @return null|object
-     */
-    public function getById(int $vehicleId);
 
     /**
      *
@@ -32,9 +18,5 @@ interface VehicleInterface
      */
     public function getAllByOwnerName(string $ownerName) : array ;
 
-    /**
-     * @return array
-     */
-    public function getAll() : array ;
 
 }

@@ -12,8 +12,10 @@ class Model extends EloquentModel
     protected $table = self::TABLE_NAME;
 
     protected $fillable = [
-        'name', 'is_hgv'
+        'name', 'is_hgv', 'manufacturer_id'
     ];
+
+    public $timestamps = false;
 
     public function vehicles(){
         return $this->hasMany(Vehicle::class);

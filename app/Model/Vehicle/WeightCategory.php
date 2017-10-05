@@ -15,6 +15,10 @@ class WeightCategory extends Model
         'id', 'name'
     ];
 
+    public $timestamps = false;
+
+    public $incrementing = false;
+
     public function vehicles(){
         return $this->hasMany(Vehicle::class);
     }

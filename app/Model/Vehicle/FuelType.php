@@ -15,6 +15,8 @@ class FuelType extends Model
         'name'
     ];
 
+    public $timestamps = false;
+
     public function vehicles(){
         return $this->hasMany(Vehicle::class);
     }
