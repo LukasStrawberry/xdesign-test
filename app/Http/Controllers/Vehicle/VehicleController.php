@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Vehicle;
 
+use App\Http\Requests\Vehicle\ShowVehicle;
 use App\Http\Resources\Vehicle\VehicleResource;
 use App\Http\Resources\Vehicle\VehicleResourceCollection;
-use App\Model\Vehicle\Vehicle;
-use App\Repository\Vehicle\VehicleRepository;
 use App\Service\Vehicle\VehicleService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 class VehicleController extends Controller
 {
@@ -41,19 +41,26 @@ class VehicleController extends Controller
      */
     public function store(Request $request)
     {
-
+        $allowedMethods = ['GET'];
+        throw new MethodNotAllowedHttpException($allowedMethods, sprintf(
+            'Method "%s" is not allowed. Allowed methods: ["%s"]',
+            $request->getMethod(), implode('","', $allowedMethods)
+        ));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Model\Vehicle\Vehicle  $vehicle
+     * @param ShowVehicle $showVehicleRequest
+     * @param int $vehicleId
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(ShowVehicle $showVehicleRequest, $vehicleId)
     {
-        if(!$vehicle = $this->vehicleService->getVehicleRepository()->getById($id)){
-            exit();
+        if(!$vehicle = $this->vehicleService->getVehicleRepository()->getById($vehicleId)){
+            abort(404, sprintf(
+                'Vehicle with id "%s" was not found', $vehicleId
+            ));
         }
 
         return new VehicleResource($vehicle);
@@ -63,22 +70,31 @@ class VehicleController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Model\Vehicle\Vehicle  $vehicle
+     * @param  int $vehicleId
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Vehicle $vehicle)
+    public function update(Request $request, $vehicleId)
     {
-        //
+        $allowedMethods = ['GET'];
+        throw new MethodNotAllowedHttpException($allowedMethods, sprintf(
+            'Method "%s" is not allowed. Allowed methods: ["%s"]',
+            $request->getMethod(), implode('","', $allowedMethods)
+        ));
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Model\Vehicle\Vehicle  $vehicle
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $vehicleId
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Vehicle $vehicle)
+    public function destroy(Request $request, $vehicleId)
     {
-        //
+        $allowedMethods = ['GET'];
+        throw new MethodNotAllowedHttpException($allowedMethods, sprintf(
+            'Method "%s" is not allowed. Allowed methods: ["%s"]',
+            $request->getMethod(), implode('","', $allowedMethods)
+        ));
     }
 }

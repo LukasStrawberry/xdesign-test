@@ -36,7 +36,7 @@ class BasicRepository implements BasicInterface
 
     public function getById(int $vehicleId)
     {
-        $record = $this->model->find(1);
+        $record = $this->model->find($vehicleId);
 
         return $record ?: false;
     }
