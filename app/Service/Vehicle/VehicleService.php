@@ -46,7 +46,7 @@ class VehicleService
                 'name' => $vehicle->getAttribute('model'),
                 'manufacturer_id' => $manufacturer->id
             ],
-            ['is_hgv' => $vehicle->getElementsByTagName('is_hgv')[0]->nodeValue ? true : false]
+            ['is_hgv' => $vehicle->getElementsByTagName('is_hgv')[0]->nodeValue == 'true' ? true : false]
         );
 
         $type = (new BasicRepository(new Type()))->getOrCreate(
@@ -100,6 +100,8 @@ class VehicleService
             'usage_id' => $usage->id,
             'weight_category_id' => $weightCategory->id,
         ];
+
+        return $data;
     }
 
     /**

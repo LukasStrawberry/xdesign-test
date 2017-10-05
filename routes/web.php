@@ -11,6 +11,14 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', function (\App\Service\Vehicle\VehicleService $vehicleService) {
+    return view('vehicles', ['vehicles' => $vehicleService->getVehicleRepository()->getAll()]);
+});
+
+Route::get('/{vehicle}', function (
+    \App\Http\Requests\Vehicle\ShowVehicle $request,
+    \App\Service\Vehicle\VehicleService $vehicleService,
+    $vehicleId
+) {
+    return view('vehicle', ['vehicle' => $vehicleService->getVehicleRepository()->getById($vehicleId)]);
 });
