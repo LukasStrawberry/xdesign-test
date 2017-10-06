@@ -59,7 +59,7 @@
                 <p class="text-left">
                     <strong>Name</strong>: {{ $vehicle->owner->name }}<br />
                     <strong>Company</strong>: {{ $vehicle->owner->company->name }}<br />
-                    <strong>Profession</strong>: {{ $vehicle->owner->role }}
+                    <strong>Profession</strong>: {{ $vehicle->owner->profession }}
                 </p>
             </div>
         </div>
